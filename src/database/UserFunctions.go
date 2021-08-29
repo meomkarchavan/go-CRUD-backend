@@ -4,7 +4,6 @@ import (
 	"blog_rest_api_gin/src/models"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -31,7 +30,26 @@ func FindUser(username string) (models.User, error) {
 	defer close(client, ctx, cancel)
 	collection := client.Database(db).Collection(userCollection)
 
-	filter := bson.D{primitive.E{Key: "username", Value: username}}
+	filter := bson.M{"username": username}
+
+	var result models.User
+
+	err = collection.FindOne(ctx, filter).Decode(&result)
+	if err != nil {
+		return models.User{}, err
+	}
+	return result, nil
+}
+func FindUserFromID(userId string) (models.User, error) {
+	client, ctx, cancel, err := createConnection(url)
+	if err != nil {
+		panic(err)
+	}
+
+	defer close(client, ctx, cancel)
+	collection := client.Database(db).Collection(userCollection)
+
+	filter := bson.M{"userid": userId}
 
 	var result models.User
 
@@ -70,7 +88,7 @@ func UpdateUser(user models.User) (*mongo.UpdateResult, error) {
 	defer close(client, ctx, cancel)
 	collection := client.Database(db).Collection(userCollection)
 
-	filter := bson.D{primitive.E{Key: "username", Value: user.Username}}
+	filter := bson.M{"userid": user.UserId}
 	update := bson.M{
 		"$set": user,
 	}
@@ -81,8 +99,7 @@ func UpdateUser(user models.User) (*mongo.UpdateResult, error) {
 	}
 	return updateResult, nil
 }
-
-func DeleteUser(username string) (*mongo.DeleteResult, error) {
+func FindAllUsers() ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
@@ -91,7 +108,27 @@ func DeleteUser(username string) (*mongo.DeleteResult, error) {
 	defer close(client, ctx, cancel)
 	collection := client.Database(db).Collection(userCollection)
 
-	filter := bson.D{primitive.E{Key: "username", Value: username}}
+	var result []bson.M
+	var cursor *mongo.Cursor
+	cursor, err = collection.Find(ctx, bson.M{})
+	if err != nil {
+		panic(err)
+	}
+	defer cursor.Close(ctx)
+	if err = cursor.All(ctx, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+func DeleteUser(userId string) (*mongo.DeleteResult, error) {
+	client, ctx, cancel, err := createConnection(url)
+	if err != nil {
+		panic(err)
+	}
+
+	defer close(client, ctx, cancel)
+	collection := client.Database(db).Collection(userCollection)
+	filter := bson.M{"userid": userId}
 
 	deleteResult, err := collection.DeleteMany(ctx, filter)
 

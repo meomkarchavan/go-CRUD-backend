@@ -39,6 +39,15 @@ func AddUser(c *gin.Context) {
 		result,
 	)
 }
+func GetAllUsers(c *gin.Context) {
+
+	result, err := database.FindAllUsers()
+	if err != nil {
+		c.JSON(http.StatusNotFound, "No Post Found")
+		return
+	}
+	c.JSON(http.StatusOK, result)
+}
 func GetUserId(c *gin.Context) {
 	var user models.User
 	if err := c.Bind(&user); err != nil {
@@ -63,21 +72,13 @@ func GetUserId(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
+	userId := c.Param("userId")
+	if userId == "" {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	validate := validator.New()
-	err := validate.Struct(user)
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
-		return
-	}
-	result, err := database.FindUser(user.Username)
+
+	result, err := database.FindUserFromID(userId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "No User Found")
 		return
@@ -91,16 +92,7 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	validate := validator.New()
-	err := validate.Struct(user)
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
-		return
-	}
-	result, err := database.DeleteUser(user.Username)
+	result, err := database.DeleteUser(user.UserId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "No User Found")
 		return

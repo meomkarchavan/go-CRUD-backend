@@ -20,5 +20,13 @@ func RegisterRoutes() *gin.Engine {
 	post.POST("/delete", routes.DeletePost)
 	post.GET("/:userId", routes.GetUserPost)
 
+	user := r.Group("/users")
+	user.GET("/", routes.GetAllUsers)
+	user.GET("/id/:userId", routes.GetUser)
+	// user.GET("/u/:username", routes.GetUser)
+	user.POST("/add", routes.AddUser)
+	user.POST("/update", routes.UpdateUser)
+	user.POST("/delete", routes.DeleteUser)
+
 	return r
 }
