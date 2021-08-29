@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"blog_rest_api_gin/src/middleware"
 	"blog_rest_api_gin/src/routes"
 	"net/http"
 
@@ -9,6 +10,7 @@ import (
 
 func RegisterRoutes() *gin.Engine {
 	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "Welcome")
 	})
