@@ -25,6 +25,7 @@ func AddPost(c *gin.Context) {
 		return
 	}
 	post.PostId = helper.Uuid(1)
+	post.Likes = 0
 	validate := validator.New()
 	err = validate.Struct(post)
 	if err != nil {
