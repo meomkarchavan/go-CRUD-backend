@@ -63,6 +63,7 @@ func GetUserTodo(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, result)
 }
+
 func GetAllTodo(c *gin.Context) {
 
 	result, err := database.FindAllTodo()

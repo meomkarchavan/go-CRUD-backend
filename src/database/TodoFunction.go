@@ -78,7 +78,7 @@ func UpdateTodo(todo models.Todo) (*mongo.UpdateResult, error) {
 	defer close(client, ctx, cancel)
 	collection := client.Database(db).Collection(todoCollection)
 
-	filter := bson.M{"userid": todo.UserId, "todoid": todo.TodoId}
+	filter := bson.M{"todoid": todo.TodoId}
 
 	update := bson.M{
 		"$set": todo,
