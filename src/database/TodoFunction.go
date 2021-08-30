@@ -8,28 +8,28 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreatePost(post models.Post) (*mongo.InsertOneResult, error) {
+func CreateTodo(todo models.Todo) (*mongo.InsertOneResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(postCollection)
-	result, err := collection.InsertOne(ctx, post)
+	collection := client.Database(db).Collection(todoCollection)
+	result, err := collection.InsertOne(ctx, todo)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func FindAllPost() ([]bson.M, error) {
+func FindAllTodo() ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(postCollection)
+	collection := client.Database(db).Collection(todoCollection)
 
 	var result []bson.M
 	var cursor *mongo.Cursor
@@ -44,14 +44,14 @@ func FindAllPost() ([]bson.M, error) {
 	return result, nil
 }
 
-func FindUserPost(userId string) ([]bson.M, error) {
+func FindUserTodo(userId string) ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(postCollection)
+	collection := client.Database(db).Collection(todoCollection)
 
 	filter := bson.M{"userid": userId}
 
@@ -69,19 +69,19 @@ func FindUserPost(userId string) ([]bson.M, error) {
 	return result, nil
 }
 
-func UpdatePost(post models.Post) (*mongo.UpdateResult, error) {
+func UpdateTodo(todo models.Todo) (*mongo.UpdateResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(postCollection)
+	collection := client.Database(db).Collection(todoCollection)
 
-	filter := bson.M{"userid": post.UserId, "postid": post.PostId}
+	filter := bson.M{"userid": todo.UserId, "todoid": todo.TodoId}
 
 	update := bson.M{
-		"$set": post,
+		"$set": todo,
 	}
 	updateResult, err := collection.UpdateOne(ctx, filter, update)
 
@@ -91,16 +91,16 @@ func UpdatePost(post models.Post) (*mongo.UpdateResult, error) {
 	return updateResult, nil
 }
 
-func DeletePost(post models.Post) (*mongo.DeleteResult, error) {
+func DeleteTodo(todo models.Todo) (*mongo.DeleteResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(postCollection)
+	collection := client.Database(db).Collection(todoCollection)
 
-	filter := bson.M{"userid": post.UserId, "postid": post.PostId}
+	filter := bson.M{"userid": todo.UserId, "todoid": todo.TodoId}
 
 	deleteResult, err := collection.DeleteMany(ctx, filter)
 

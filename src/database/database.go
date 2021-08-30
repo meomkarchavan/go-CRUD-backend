@@ -11,10 +11,10 @@ import (
 
 // var collection *mongo.Collection
 
-const db = "training_db"
+const db = "Todo"
 
 var userCollection = "users"
-var postCollection = "post"
+var todoCollection = "todo"
 
 var url = "mongodb://localhost:27017/"
 

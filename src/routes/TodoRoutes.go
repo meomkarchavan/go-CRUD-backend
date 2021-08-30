@@ -10,24 +10,24 @@ import (
 	"github.com/go-playground/validator"
 )
 
-func AddPost(c *gin.Context) {
-	var post models.Post
-	err := c.Bind(&post)
+func AddTodo(c *gin.Context) {
+	var todo models.Todo
+	err := c.Bind(&todo)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	if (post == models.Post{}) {
+	if (todo == models.Todo{}) {
 		c.JSON(
 			http.StatusBadRequest,
 			"Please Provide Data",
 		)
 		return
 	}
-	post.PostId = helper.Uuid(1)
-	post.Likes = 0
+	todo.TodoId = helper.Uuid(1)
+	todo.Done = false
 	validate := validator.New()
-	err = validate.Struct(post)
+	err = validate.Struct(todo)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -36,7 +36,7 @@ func AddPost(c *gin.Context) {
 		return
 	}
 
-	result, err := database.CreatePost(post)
+	result, err := database.CreateTodo(todo)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -50,36 +50,36 @@ func AddPost(c *gin.Context) {
 	)
 }
 
-func GetUserPost(c *gin.Context) {
+func GetUserTodo(c *gin.Context) {
 	userId := c.Param("userId")
 	if userId == "" {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	result, err := database.FindUserPost(userId)
+	result, err := database.FindUserTodo(userId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, "No Post Found")
+		c.JSON(http.StatusNotFound, "No Todo Found")
 		return
 	}
 	c.JSON(http.StatusOK, result)
 }
-func GetAllPost(c *gin.Context) {
+func GetAllTodo(c *gin.Context) {
 
-	result, err := database.FindAllPost()
+	result, err := database.FindAllTodo()
 	if err != nil {
-		c.JSON(http.StatusNotFound, "No Post Found")
+		c.JSON(http.StatusNotFound, "No Todo Found")
 		return
 	}
 	c.JSON(http.StatusOK, result)
 }
 
-func DeletePost(c *gin.Context) {
-	var post models.Post
-	if err := c.Bind(&post); err != nil {
+func DeleteTodo(c *gin.Context) {
+	var todo models.Todo
+	if err := c.Bind(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	result, err := database.DeletePost(post)
+	result, err := database.DeleteTodo(todo)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "No User Found")
 		return
@@ -87,14 +87,14 @@ func DeletePost(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-func UpdatePost(c *gin.Context) {
-	var post models.Post
-	err := c.Bind(&post)
+func UpdateTodo(c *gin.Context) {
+	var todo models.Todo
+	err := c.Bind(&todo)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	result, err := database.UpdatePost(post)
+	result, err := database.UpdateTodo(todo)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,

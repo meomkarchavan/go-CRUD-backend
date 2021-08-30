@@ -43,7 +43,7 @@ func GetAllUsers(c *gin.Context) {
 
 	result, err := database.FindAllUsers()
 	if err != nil {
-		c.JSON(http.StatusNotFound, "No Post Found")
+		c.JSON(http.StatusNotFound, "No User Found")
 		return
 	}
 	c.JSON(http.StatusOK, result)
