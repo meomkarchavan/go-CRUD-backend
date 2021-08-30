@@ -11,7 +11,7 @@ import (
 
 // var collection *mongo.Collection
 
-const db = "Blog"
+const db = "training_db"
 
 var userCollection = "users"
 var postCollection = "post"

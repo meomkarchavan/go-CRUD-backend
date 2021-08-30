@@ -13,7 +13,6 @@ func CreatePost(post models.Post) (*mongo.InsertOneResult, error) {
 	if err != nil {
 		panic(err)
 	}
-
 	defer close(client, ctx, cancel)
 	collection := client.Database(db).Collection(postCollection)
 	result, err := collection.InsertOne(ctx, post)
