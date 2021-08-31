@@ -8,28 +8,28 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateVisit(visit models.Visit) (*mongo.InsertOneResult, error) {
+func CreatePass(pass models.Pass) (*mongo.InsertOneResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(visitCollection)
-	result, err := collection.InsertOne(ctx, visit)
+	collection := client.Database(db).Collection(passCollection)
+	result, err := collection.InsertOne(ctx, pass)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func FindAllVisit() ([]bson.M, error) {
+func FindAllPass() ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(visitCollection)
+	collection := client.Database(db).Collection(passCollection)
 
 	var result []bson.M
 	var cursor *mongo.Cursor
@@ -44,14 +44,14 @@ func FindAllVisit() ([]bson.M, error) {
 	return result, nil
 }
 
-func FindUserVisit(userId string) ([]bson.M, error) {
+func FindUserPass(userId string) ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(visitCollection)
+	collection := client.Database(db).Collection(passCollection)
 
 	filter := bson.M{"userid": userId}
 
@@ -69,19 +69,19 @@ func FindUserVisit(userId string) ([]bson.M, error) {
 	return result, nil
 }
 
-func UpdateVisit(visit models.Visit) (*mongo.UpdateResult, error) {
+func UpdatePass(pass models.Pass) (*mongo.UpdateResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(visitCollection)
+	collection := client.Database(db).Collection(passCollection)
 
-	filter := bson.M{"visitid": visit.VisitId}
+	filter := bson.M{"passid": pass.PassId}
 
 	update := bson.M{
-		"$set": visit,
+		"$set": pass,
 	}
 	updateResult, err := collection.UpdateOne(ctx, filter, update)
 
@@ -91,16 +91,16 @@ func UpdateVisit(visit models.Visit) (*mongo.UpdateResult, error) {
 	return updateResult, nil
 }
 
-func DeleteVisit(visit models.Visit) (*mongo.DeleteResult, error) {
+func DeletePass(pass models.Pass) (*mongo.DeleteResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(visitCollection)
+	collection := client.Database(db).Collection(passCollection)
 
-	filter := bson.M{"userid": visit.UserId, "visitid": visit.VisitId}
+	filter := bson.M{"userid": pass.UserId, "passid": pass.PassId}
 
 	deleteResult, err := collection.DeleteMany(ctx, filter)
 

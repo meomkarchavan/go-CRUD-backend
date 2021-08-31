@@ -10,12 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func LoginMiddleware(c *gin.Context) {
-	if strings.HasPrefix(c.Request.URL.Path, "/login") ||
-		strings.HasPrefix(c.Request.URL.Path, "/public") {
+func CheckRoleMiddleware(c *gin.Context) {
 
-		return
-	}
 	token := c.GetHeader("Authorization")
 	if token == "" {
 		c.JSON(http.StatusUnauthorized, "Token Required")
@@ -49,6 +45,14 @@ func LoginMiddleware(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, "Server Token not matched")
 		c.Abort()
 		return
+	}
+	role := claims["role"]
+
+	if role != "admin" {
+		c.JSON(http.StatusUnauthorized, "Admin Access Required")
+		c.Abort()
+		return
+
 	}
 	c.Next()
 }

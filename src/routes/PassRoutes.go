@@ -5,33 +5,30 @@ import (
 	helper "go_visitors_maintain_backend/src/helpers"
 	"go_visitors_maintain_backend/src/models"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func AddVisit(c *gin.Context) {
-	var visit models.Visit
-	err := c.Bind(&visit)
+func AddPass(c *gin.Context) {
+	var pass models.Pass
+	err := c.Bind(&pass)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	if (visit == models.Visit{}) {
+	if (pass == models.Pass{}) {
 		c.JSON(
 			http.StatusBadRequest,
 			"Please Provide Data",
 		)
 		return
 	}
-	visit.VisitId = helper.Uuid(1)
-	visit.Date = primitive.Timestamp{T: uint32(time.Now().Unix())}
-	visit.Approved = false
-	visit.Rejected = false
+	pass.PassId = helper.Uuid(1)
+	pass.Approved = false
+	pass.Rejected = false
 	validate := validator.New()
-	err = validate.Struct(visit)
+	err = validate.Struct(pass)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -40,7 +37,7 @@ func AddVisit(c *gin.Context) {
 		return
 	}
 
-	result, err := database.CreateVisit(visit)
+	result, err := database.CreatePass(pass)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -54,37 +51,37 @@ func AddVisit(c *gin.Context) {
 	)
 }
 
-func GetUserVisit(c *gin.Context) {
+func GetUserPass(c *gin.Context) {
 	userId := c.Param("userId")
 	if userId == "" {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	result, err := database.FindUserVisit(userId)
+	result, err := database.FindUserPass(userId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, "No Visit Found")
+		c.JSON(http.StatusNotFound, "No Pass Found")
 		return
 	}
 	c.JSON(http.StatusOK, result)
 }
 
-func GetAllVisit(c *gin.Context) {
+func GetAllPass(c *gin.Context) {
 
-	result, err := database.FindAllVisit()
+	result, err := database.FindAllPass()
 	if err != nil {
-		c.JSON(http.StatusNotFound, "No Visit Found")
+		c.JSON(http.StatusNotFound, "No Pass Found")
 		return
 	}
 	c.JSON(http.StatusOK, result)
 }
 
-func DeleteVisit(c *gin.Context) {
-	var visit models.Visit
-	if err := c.Bind(&visit); err != nil {
+func DeletePass(c *gin.Context) {
+	var pass models.Pass
+	if err := c.Bind(&pass); err != nil {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	result, err := database.DeleteVisit(visit)
+	result, err := database.DeletePass(pass)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "No User Found")
 		return
@@ -92,14 +89,14 @@ func DeleteVisit(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-func UpdateVisit(c *gin.Context) {
-	var visit models.Visit
-	err := c.Bind(&visit)
+func UpdatePass(c *gin.Context) {
+	var pass models.Pass
+	err := c.Bind(&pass)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	result, err := database.UpdateVisit(visit)
+	result, err := database.UpdatePass(pass)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
