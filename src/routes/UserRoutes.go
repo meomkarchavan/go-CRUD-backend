@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"blog_rest_api_gin/src/database"
-	helper "blog_rest_api_gin/src/helpers"
-	"blog_rest_api_gin/src/models"
+	"go_visitors_maintain_backend/src/database"
+	helper "go_visitors_maintain_backend/src/helpers"
+	"go_visitors_maintain_backend/src/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

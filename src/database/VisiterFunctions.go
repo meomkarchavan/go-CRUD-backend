@@ -1,35 +1,35 @@
 package database
 
 import (
-	"blog_rest_api_gin/src/models"
+	"go_visitors_maintain_backend/src/models"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateTodo(todo models.Todo) (*mongo.InsertOneResult, error) {
+func CreateVisit(visit models.Visit) (*mongo.InsertOneResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(todoCollection)
-	result, err := collection.InsertOne(ctx, todo)
+	collection := client.Database(db).Collection(visitCollection)
+	result, err := collection.InsertOne(ctx, visit)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func FindAllTodo() ([]bson.M, error) {
+func FindAllVisit() ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(todoCollection)
+	collection := client.Database(db).Collection(visitCollection)
 
 	var result []bson.M
 	var cursor *mongo.Cursor
@@ -44,14 +44,14 @@ func FindAllTodo() ([]bson.M, error) {
 	return result, nil
 }
 
-func FindUserTodo(userId string) ([]bson.M, error) {
+func FindUserVisit(userId string) ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(todoCollection)
+	collection := client.Database(db).Collection(visitCollection)
 
 	filter := bson.M{"userid": userId}
 
@@ -69,19 +69,19 @@ func FindUserTodo(userId string) ([]bson.M, error) {
 	return result, nil
 }
 
-func UpdateTodo(todo models.Todo) (*mongo.UpdateResult, error) {
+func UpdateVisit(visit models.Visit) (*mongo.UpdateResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(todoCollection)
+	collection := client.Database(db).Collection(visitCollection)
 
-	filter := bson.M{"todoid": todo.TodoId}
+	filter := bson.M{"visitid": visit.VisitId}
 
 	update := bson.M{
-		"$set": todo,
+		"$set": visit,
 	}
 	updateResult, err := collection.UpdateOne(ctx, filter, update)
 
@@ -91,16 +91,16 @@ func UpdateTodo(todo models.Todo) (*mongo.UpdateResult, error) {
 	return updateResult, nil
 }
 
-func DeleteTodo(todo models.Todo) (*mongo.DeleteResult, error) {
+func DeleteVisit(visit models.Visit) (*mongo.DeleteResult, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(todoCollection)
+	collection := client.Database(db).Collection(visitCollection)
 
-	filter := bson.M{"userid": todo.UserId, "todoid": todo.TodoId}
+	filter := bson.M{"userid": visit.UserId, "visitid": visit.VisitId}
 
 	deleteResult, err := collection.DeleteMany(ctx, filter)
 

@@ -1,7 +1,7 @@
 package services
 
 import (
-	"blog_rest_api_gin/src/models"
+	"go_visitors_maintain_backend/src/models"
 	"net/http"
 	"os"
 	"time"

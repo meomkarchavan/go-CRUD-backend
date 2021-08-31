@@ -1,4 +1,4 @@
-module blog_rest_api_gin
+module go_visitors_maintain_backend
 
 go 1.15
 

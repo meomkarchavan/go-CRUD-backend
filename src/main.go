@@ -1,7 +1,7 @@
 package main
 
 import (
-	"blog_rest_api_gin/src/controller"
+	"go_visitors_maintain_backend/src/controller"
 	"os"
 )
 

@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"blog_rest_api_gin/src/models"
-	"blog_rest_api_gin/src/services"
+	"go_visitors_maintain_backend/src/models"
+	"go_visitors_maintain_backend/src/services"
 	"net/http"
 	"strings"
 

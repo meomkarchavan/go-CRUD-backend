@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"blog_rest_api_gin/src/routes"
-	"blog_rest_api_gin/src/services"
+	"go_visitors_maintain_backend/src/routes"
+	"go_visitors_maintain_backend/src/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,13 +15,13 @@ func RegisterRoutes() *gin.Engine {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "Welcome")
 	})
-	todo := r.Group("/todo")
-	todo.GET("/", routes.GetAllTodo)
+	visit := r.Group("/visit")
+	visit.GET("/", routes.GetAllVisit)
 
-	todo.POST("/add", routes.AddTodo)
-	todo.POST("/update", routes.UpdateTodo)
-	todo.POST("/delete", routes.DeleteTodo)
-	todo.GET("/:userId", routes.GetUserTodo)
+	visit.POST("/add", routes.AddVisit)
+	visit.POST("/update", routes.UpdateVisit)
+	visit.POST("/delete", routes.DeleteVisit)
+	visit.GET("/:userId", routes.GetUserVisit)
 
 	user := r.Group("/users")
 	user.GET("/", routes.GetAllUsers)

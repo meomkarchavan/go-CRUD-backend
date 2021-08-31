@@ -1,33 +1,37 @@
 package routes
 
 import (
-	"blog_rest_api_gin/src/database"
-	helper "blog_rest_api_gin/src/helpers"
-	"blog_rest_api_gin/src/models"
+	"go_visitors_maintain_backend/src/database"
+	helper "go_visitors_maintain_backend/src/helpers"
+	"go_visitors_maintain_backend/src/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func AddTodo(c *gin.Context) {
-	var todo models.Todo
-	err := c.Bind(&todo)
+func AddVisit(c *gin.Context) {
+	var visit models.Visit
+	err := c.Bind(&visit)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	if (todo == models.Todo{}) {
+	if (visit == models.Visit{}) {
 		c.JSON(
 			http.StatusBadRequest,
 			"Please Provide Data",
 		)
 		return
 	}
-	todo.TodoId = helper.Uuid(1)
-	todo.Done = false
+	visit.VisitId = helper.Uuid(1)
+	visit.Date = primitive.Timestamp{T: uint32(time.Now().Unix())}
+	visit.Approved = false
+	visit.Rejected = false
 	validate := validator.New()
-	err = validate.Struct(todo)
+	err = validate.Struct(visit)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -36,7 +40,7 @@ func AddTodo(c *gin.Context) {
 		return
 	}
 
-	result, err := database.CreateTodo(todo)
+	result, err := database.CreateVisit(visit)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -50,37 +54,37 @@ func AddTodo(c *gin.Context) {
 	)
 }
 
-func GetUserTodo(c *gin.Context) {
+func GetUserVisit(c *gin.Context) {
 	userId := c.Param("userId")
 	if userId == "" {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	result, err := database.FindUserTodo(userId)
+	result, err := database.FindUserVisit(userId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, "No Todo Found")
+		c.JSON(http.StatusNotFound, "No Visit Found")
 		return
 	}
 	c.JSON(http.StatusOK, result)
 }
 
-func GetAllTodo(c *gin.Context) {
+func GetAllVisit(c *gin.Context) {
 
-	result, err := database.FindAllTodo()
+	result, err := database.FindAllVisit()
 	if err != nil {
-		c.JSON(http.StatusNotFound, "No Todo Found")
+		c.JSON(http.StatusNotFound, "No Visit Found")
 		return
 	}
 	c.JSON(http.StatusOK, result)
 }
 
-func DeleteTodo(c *gin.Context) {
-	var todo models.Todo
-	if err := c.Bind(&todo); err != nil {
+func DeleteVisit(c *gin.Context) {
+	var visit models.Visit
+	if err := c.Bind(&visit); err != nil {
 		c.JSON(http.StatusBadRequest, "Invalid Data Provided")
 		return
 	}
-	result, err := database.DeleteTodo(todo)
+	result, err := database.DeleteVisit(visit)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "No User Found")
 		return
@@ -88,14 +92,14 @@ func DeleteTodo(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-func UpdateTodo(c *gin.Context) {
-	var todo models.Todo
-	err := c.Bind(&todo)
+func UpdateVisit(c *gin.Context) {
+	var visit models.Visit
+	err := c.Bind(&visit)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	result, err := database.UpdateTodo(todo)
+	result, err := database.UpdateVisit(visit)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,

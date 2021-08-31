@@ -1,7 +1,7 @@
 package database
 
 import (
-	"blog_rest_api_gin/src/models"
+	"go_visitors_maintain_backend/src/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

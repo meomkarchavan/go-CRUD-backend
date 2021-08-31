@@ -10,4 +10,5 @@ type User struct {
 	Email     string             `json:"email" validate:"email"`
 	Username  string             `json:"username" validate:"alphanum,required,gte=5,lte=20"`
 	Password  string             `json:"password" validate:"gte=5,lte=100"`
+	Role      string             `json:"role"`
 }

@@ -9,13 +9,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// var collection *mongo.Collection
-
-const db = "Todo"
+const db = "VisiterManagement"
 
 var userCollection = "users"
-var todoCollection = "todo"
-
+var visitCollection = "visit"
 var url = "mongodb://localhost:27017/"
 
 func close(client *mongo.Client, ctx context.Context,
