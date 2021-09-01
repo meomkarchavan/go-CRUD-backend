@@ -4,6 +4,7 @@ import (
 	"go_visitors_maintain_backend/src/database"
 	helper "go_visitors_maintain_backend/src/helpers"
 	"go_visitors_maintain_backend/src/models"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 
 func AddPass(c *gin.Context) {
 	var pass models.Pass
+
 	err := c.Bind(&pass)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -24,6 +26,7 @@ func AddPass(c *gin.Context) {
 		)
 		return
 	}
+	log.Println(pass)
 	pass.PassId = helper.Uuid(1)
 	pass.Approved = false
 	pass.Rejected = false
@@ -36,8 +39,9 @@ func AddPass(c *gin.Context) {
 		)
 		return
 	}
+	log.Println(pass)
 
-	result, err := database.CreatePass(pass)
+	_, err = database.CreatePass(pass)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -47,7 +51,7 @@ func AddPass(c *gin.Context) {
 	}
 	c.JSON(
 		http.StatusOK,
-		result,
+		pass,
 	)
 }
 
@@ -92,6 +96,7 @@ func DeletePass(c *gin.Context) {
 func UpdatePass(c *gin.Context) {
 	var pass models.Pass
 	err := c.Bind(&pass)
+	log.Println(pass)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return

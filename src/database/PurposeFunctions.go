@@ -5,14 +5,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func FindAllPourpose() ([]bson.M, error) {
+func FindAllPurpose() ([]bson.M, error) {
 	client, ctx, cancel, err := createConnection(url)
 	if err != nil {
 		panic(err)
 	}
 
 	defer close(client, ctx, cancel)
-	collection := client.Database(db).Collection(passCollection)
+	collection := client.Database(db).Collection(pourposeCollection)
 
 	var result []bson.M
 	var cursor *mongo.Cursor

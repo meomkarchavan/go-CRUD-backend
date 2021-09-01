@@ -13,7 +13,7 @@ const db = "VisiterManagement"
 
 var userCollection = "users"
 var passCollection = "pass"
-var pourposeCollection = "pourpose"
+var pourposeCollection = "purpose"
 var url = "mongodb://localhost:27017/"
 
 func close(client *mongo.Client, ctx context.Context,

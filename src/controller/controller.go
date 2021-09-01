@@ -20,7 +20,7 @@ func RegisterRoutes() *gin.Engine {
 	pass.GET("/", middleware.LoginMiddleware, routes.GetAllPass)
 
 	pass.POST("/add", middleware.LoginMiddleware, routes.AddPass)
-	pass.POST("/update", middleware.LoginMiddleware, routes.UpdatePass)
+	pass.POST("/update", middleware.LoginMiddleware, middleware.CheckRoleMiddleware, routes.UpdatePass)
 	pass.POST("/delete", middleware.LoginMiddleware, routes.DeletePass)
 	pass.GET("/:userId", middleware.LoginMiddleware, routes.GetUserPass)
 
@@ -31,6 +31,8 @@ func RegisterRoutes() *gin.Engine {
 	user.POST("/add", middleware.LoginMiddleware, middleware.CheckRoleMiddleware, routes.AddUser)
 	user.POST("/update", middleware.LoginMiddleware, middleware.CheckRoleMiddleware, routes.UpdateUser)
 	user.POST("/delete", middleware.LoginMiddleware, middleware.CheckRoleMiddleware, routes.DeleteUser)
+
+	r.GET("/purpose", routes.GetPurpose)
 
 	r.POST("/login", services.Login)
 	r.POST("/signup", services.SignUp)

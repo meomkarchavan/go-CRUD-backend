@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func Login(c *gin.Context) {
@@ -38,7 +39,8 @@ func Login(c *gin.Context) {
 	models.LoginTokens[result.UserId] = &lt
 	c.Header("Authorization", token["access_token"])
 	c.Header("refresh_token", token["refresh_token"])
-	c.JSON(http.StatusOK, token)
+	data := bson.M{"token": token, "user": result}
+	c.JSON(http.StatusOK, data)
 }
 
 func SignUp(c *gin.Context) {
@@ -66,5 +68,6 @@ func SignUp(c *gin.Context) {
 	models.LoginTokens[user.UserId] = &lt
 	c.Header("Authorization", token["access_token"])
 	c.Header("refresh_token", token["refresh_token"])
-	c.JSON(http.StatusOK, token)
+	data := bson.M{"token": token, "user": user}
+	c.JSON(http.StatusOK, data)
 }
